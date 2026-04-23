@@ -1,0 +1,21 @@
+﻿[
+{
+    "guid":  "b7c8d9e0-f1a2-3b4c-5d6e-7f8090a1b2c3",
+    "name":  "JellyFusion",
+    "description":  "All-in-one Jellyfin plugin V3: Netflix-style banner with trailers, smart badges (LAT/SUB/NUEVO/KID), configurable studios, home rails (Top 10), 7 themes, navigation shortcuts, Discord/Telegram notifications and a 4-language UI (ES/EN/PT/FR).",
+    "overview":  "Reemplaza 4-5 plugins individuales con una sola instalacion. Banner con traileres TMDB, badges inteligentes, studios configurables, Top 10 rails y tema visual por plataforma.",
+    "owner":  "KOOL4",
+    "category":  "General",
+    "imageUrl":  "https://raw.githubusercontent.com/KOOL4/JellyFusionV3/main/assets/logo.png",
+    "versions":  [
+                     {
+                         "version":  "3.0.1.0",
+                         "changelog":  "V3.0.1 - Fresh start basado en la linea 2.0.5/2.7.0 con todos los fixes acumulados mas las 3 correcciones criticas del primer ciclo de feedback: (A) Checkboxes y selects responden correctamente - dual-bind con on* + addEventListener para sobrevivir al re-render del shell de Jellyfin. (B) Dropdowns ya no se cierran solos - los clicks en platform/theme cards solo hacen toggle de clase, no vuelven a renderizar el panel completo. (C) CRITICO: ClientScriptInjectionMiddleware (IStartupFilter) ahora inyecta /JellyFusion/bootstrap.js en /web/index.html de Jellyfin; el bootstrap pinta banner Netflix-style con trailers, Top 10 rails y tema CSS directamente en la home del cliente - el plugin FINALMENTE altera la pantalla principal de Jellyfin, que era todo su proposito. Incluye UI con 8 tabs, 4 idiomas, modal de estudios, color pickers, live preview, BadgeMiddleware, CustomText List (XmlSerializer-safe), ParseColor hardened, ThemeService FontFamily system-aware, SliderService sin CS1998, JSON payload 1:1 con clases C#, deep-merge, indicador de cambios sin guardar, editor de custom badges. GUID nuevo para no colisionar con 2.x.",
+                         "targetAbi":  "10.10.0.0",
+                         "sourceUrl":  "https://github.com/KOOL4/JellyFusionV3/releases/download/v3.0.1/JellyFusion-v3.0.1.zip",
+                         "checksum":  "3ff7a8df15339b8275ea42bcc67cae02",
+                         "timestamp":  "2026-04-23T19:56:45Z"
+                     }
+                 ]
+}
+]
