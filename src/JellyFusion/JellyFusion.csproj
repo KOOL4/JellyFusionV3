@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>JellyFusion</AssemblyName>
+    <RootNamespace>JellyFusion</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <Version>3.0.0</Version>
+    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>3.0.0.0</FileVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      PrivateAssets=all prevents these packages' DLLs from being copied
+      into the plugin's output directory. Jellyfin already provides them
+      at runtime, so shipping duplicates causes assembly-load conflicts
+      and bloats the plugin ZIP.
+    -->
+    <PackageReference Include="Jellyfin.Controller" Version="10.10.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Jellyfin.Model" Version="10.10.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <!-- SkiaSharp is also bundled by Jellyfin -->
+    <PackageReference Include="SkiaSharp" Version="2.88.8">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.8">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- Embed all web resources -->
+  <ItemGroup>
+    <EmbeddedResource Include="Web\**\*" />
+    <EmbeddedResource Include="Localization\**\*.json" />
+  </ItemGroup>
+</Project>
+

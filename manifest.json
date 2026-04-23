@@ -1,0 +1,21 @@
+﻿[
+{
+    "guid":  "b7c8d9e0-f1a2-3b4c-5d6e-7f8090a1b2c3",
+    "name":  "JellyFusion",
+    "description":  "All-in-one Jellyfin plugin V3: Netflix-style banner with trailers, smart badges (LAT/SUB/NUEVO/KID), configurable studios, home rails (Top 10), 7 themes, navigation shortcuts, Discord/Telegram notifications and a 4-language UI (ES/EN/PT/FR).",
+    "overview":  "Reemplaza 4-5 plugins individuales con una sola instalacion. Banner con traileres TMDB, badges inteligentes, studios configurables, Top 10 rails y tema visual por plataforma.",
+    "owner":  "KOOL4",
+    "category":  "General",
+    "imageUrl":  "https://raw.githubusercontent.com/KOOL4/JellyFusionV3/main/assets/logo.png",
+    "versions":  [
+                     {
+                         "version":  "3.0.0.0",
+                         "changelog":  "V3.0.0 - Fresh start basado en la linea 2.0.5/2.7.0. Trae todo el potencial grafico de 2.0.5 (UI con 8 tabs, banner Netflix-style, home rails, 4 idiomas, modal de estudios, color pickers, live preview) mas todos los fixes acumulados: BadgeMiddleware IStartupFilter, CustomText como List (XmlSerializer-safe), ParseColor hardened, ThemeService FontFamily system-aware, SliderService sin CS1998, JSON payload 1:1 con clases C#, deep-merge de config contra defaults, errores reales en la UI, indicador de cambios sin guardar, editor de custom badges. GUID nuevo para que no colisione con instalaciones previas de JellyFusion 2.x.",
+                         "targetAbi":  "10.10.0.0",
+                         "sourceUrl":  "https://github.com/KOOL4/JellyFusionV3/releases/download/v3.0.0/JellyFusion-v3.0.0.zip",
+                         "checksum":  "e26be4de6024f7a4dab762cebdd6ce25",
+                         "timestamp":  "2026-04-23T19:31:55Z"
+                     }
+                 ]
+}
+]
