@@ -1,0 +1,21 @@
+﻿[
+{
+    "guid":  "b7c8d9e0-f1a2-3b4c-5d6e-7f8090a1b2c3",
+    "name":  "JellyFusion",
+    "description":  "All-in-one Jellyfin plugin V3: Netflix-style banner with trailers, smart badges (LAT/SUB/NUEVO/KID), configurable studios, home rails (Top 10), 7 themes, navigation shortcuts, Discord/Telegram notifications and a 4-language UI (ES/EN/PT/FR).",
+    "overview":  "Reemplaza 4-5 plugins individuales con una sola instalacion. Banner con traileres TMDB, badges inteligentes, studios configurables, Top 10 rails y tema visual por plataforma.",
+    "owner":  "KOOL4",
+    "category":  "General",
+    "imageUrl":  "https://raw.githubusercontent.com/KOOL4/JellyFusionV3/main/assets/logo.png",
+    "versions":  [
+                     {
+                         "version":  "3.0.2.0",
+                         "changelog":  "V3.0.2 - Segundo ciclo de feedback, cinco fixes: (1) ClientScriptInjectionMiddleware ahora intercepta correctamente /web/index.html. v3.0.1 solo reemplazaba Response.Body, pero Jellyfin sirve el shell con UseStaticFiles -\u003e SendFileAsync, que escribe directo al socket y salta cualquier stream inyectado en Response.Body - la inyeccion no ocurria. v3.0.2 reemplaza ADEMAS el IHttpResponseBodyFeature por un StreamResponseBodyFeature envolviendo el MemoryStream, asi SendFileAsync/StartAsync/CompleteAsync terminan en el buffer y el \u003cscript src=\u0027/JellyFusion/bootstrap.js\u0027\u003e SI se inserta antes de \u003c/body\u003e. Tambien limpia Content-Length y Content-Encoding antes de reescribir para evitar truncado/garbage al final del HTML. (2) Preview de la pestaña Banner se refresca al elegir plataforma via refreshBannerPreviewBlock() - patch quirurgico del nodo .jf-preview-block dentro de #jf-panels, sin re-renderizar el panel completo (dropdowns siguen abiertos, focus se preserva). (3) Pestaña Temas: clicks en theme cards aplican y muestran el tema en el preview via refreshThemePreviewBlock(). (4) Menus duplicados y triple-fire de checkboxes eliminados - el dual-bind (on* + addEventListener) ahora corre detras de un flag \u0027inflight\u0027 con setTimeout reset, garantizando un unico disparo por interaccion; se removio el wrapping extra de onclick en inputs tipo checkbox. (5) Version badges y manifest actualizados a 3.0.2 en UI (header de la config page y pie de pagina), csproj, push.ps1 y manifest.json.",
+                         "targetAbi":  "10.10.0.0",
+                         "sourceUrl":  "https://github.com/KOOL4/JellyFusionV3/releases/download/v3.0.2/JellyFusion-v3.0.2.zip",
+                         "checksum":  "9aa334f760adab30cdfc4b49a834237a",
+                         "timestamp":  "2026-04-24T00:26:46Z"
+                     }
+                 ]
+}
+]
