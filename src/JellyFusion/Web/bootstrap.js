@@ -23,7 +23,7 @@
     if (window.__JELLYFUSION_LOADED__) { return; }
     window.__JELLYFUSION_LOADED__ = true;
 
-    var VERSION = "3.0.6";
+    var VERSION = "3.0.6.1";
     var LOG_PREFIX = "[JellyFusion]";
     function log()  { try { console.log.apply(console, [LOG_PREFIX].concat([].slice.call(arguments))); } catch (e) {} }
     function warn() { try { console.warn.apply(console, [LOG_PREFIX].concat([].slice.call(arguments))); } catch (e) {} }
@@ -78,6 +78,10 @@
             "background:#1a1a22;cursor:pointer;transition:transform .18s ease;}",
             ".jf-rail .jf-card:hover{transform:scale(1.04);}",
             ".jf-rail .jf-card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;}",
+            ".jf-rail .jf-card.jf-card-static{cursor:default;}",
+            ".jf-rail .jf-card .jf-card-placeholder{width:100%;aspect-ratio:2/3;display:block;background:linear-gradient(180deg,#2a2a33,#121218);}",
+            ".jf-rail .jf-card.jf-studio-card{display:flex;align-items:center;justify-content:center;min-height:120px;}",
+            ".jf-rail .jf-card.jf-studio-card img{aspect-ratio:16/9;object-fit:contain;padding:18px;}",
             ".jf-rail .jf-card .jf-rank{position:absolute;left:6px;top:4px;font-size:58px;font-weight:900;",
             "color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.9),-2px 0 0 #000,2px 0 0 #000,0 -2px 0 #000,0 2px 0 #000;line-height:1;}",
             ".jf-rail .jf-card .jf-name{position:absolute;left:0;right:0;bottom:0;padding:6px 8px;background:linear-gradient(transparent,rgba(0,0,0,.9));",
@@ -262,23 +266,72 @@
                 var row = document.createElement("div");
                 row.className = "jf-rail";
                 row.setAttribute("data-jf-rail", rail.id || rail.title || "rail");
-                var cards = rail.items.map(function (it, idx) {
-                    var rank = rail.showRank ? "<div class='jf-rank'>" + (idx + 1) + "</div>" : "";
-                    var img  = "/Items/" + it.id + "/Images/Primary?fillHeight=270&quality=80";
-                    return "<div class='jf-card' data-id='" + it.id + "'>" +
-                               rank +
-                               "<img src='" + img + "' alt=''/>" +
-                               "<div class='jf-name'>" + (it.name || "") + "</div>" +
-                           "</div>";
-                }).join("");
-                row.innerHTML =
-                    "<h2>" + (rail.title || "") + "</h2>" +
-                    "<div class='jf-row'>" + cards + "</div>";
+                var title = document.createElement("h2");
+                title.textContent = rail.title || "";
+                row.appendChild(title);
+
+                var rowBody = document.createElement("div");
+                rowBody.className = "jf-row";
+                rail.items.forEach(function (it, idx) {
+                    var card = document.createElement("div");
+                    card.className = "jf-card";
+
+                    if (it && it.kind === "Studio") {
+                        card.classList.add("jf-studio-card");
+                        if (it.gradient) {
+                            card.style.background = it.gradient;
+                        }
+                    }
+
+                    if (it && it.detailsId) {
+                        card.setAttribute("data-details-id", it.detailsId);
+                    }
+                    if (it && it.browseUrl) {
+                        card.setAttribute("data-browse-url", it.browseUrl);
+                    }
+                    if (!card.getAttribute("data-details-id") && !card.getAttribute("data-browse-url")) {
+                        card.classList.add("jf-card-static");
+                    }
+
+                    if (rail.showRank) {
+                        var rank = document.createElement("div");
+                        rank.className = "jf-rank";
+                        rank.textContent = String(idx + 1);
+                        card.appendChild(rank);
+                    }
+
+                    var imgSrc = (it && (it.logoUrl || it.imageUrl)) ||
+                        ((it && it.detailsId) ? ("/Items/" + it.detailsId + "/Images/Primary?fillHeight=270&quality=80") : "");
+
+                    if (imgSrc) {
+                        var img = document.createElement("img");
+                        img.src = imgSrc;
+                        img.alt = it && it.name ? it.name : "";
+                        card.appendChild(img);
+                    } else {
+                        var placeholder = document.createElement("div");
+                        placeholder.className = "jf-card-placeholder";
+                        card.appendChild(placeholder);
+                    }
+
+                    var name = document.createElement("div");
+                    name.className = "jf-name";
+                    name.textContent = it && it.name ? it.name : "";
+                    card.appendChild(name);
+
+                    rowBody.appendChild(card);
+                });
+                row.appendChild(rowBody);
                 // Click → details
                 row.addEventListener("click", function (ev) {
                     var card = ev.target.closest ? ev.target.closest(".jf-card") : null;
-                    if (card && card.getAttribute("data-id")) {
-                        location.hash = "#/details?id=" + card.getAttribute("data-id");
+                    if (!card) return;
+                    var browseUrl = card.getAttribute("data-browse-url");
+                    var detailsId = card.getAttribute("data-details-id");
+                    if (browseUrl) {
+                        location.href = browseUrl;
+                    } else if (detailsId) {
+                        location.hash = "#/details?id=" + detailsId;
                     }
                 });
                 container.appendChild(row);
@@ -399,4 +452,3 @@
         boot();
     }
 })();
-

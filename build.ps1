@@ -1,16 +1,40 @@
-﻿param(
-    [string]$Version = "3.0.6",
+param(
+    [string]$Version = "",
     [string]$Guid    = "b7c8d9e0-f1a2-3b4c-5d6e-7f8090a1b2c3",
-    [string]$Owner   = "KOOL4"
+    [string]$Owner   = "KOOL4",
+    [string]$Repo    = "JellyFusionV3",
+    [string]$Changelog = ""
 )
 
 $ErrorActionPreference = "Stop"
-$Root   = $PSScriptRoot
-$Proj   = Join-Path $Root "src\JellyFusion\JellyFusion.csproj"
-$Pub    = Join-Path $Root "publish"
-$Rel    = Join-Path $Root "releases"
-$ZipOut = Join-Path $Rel  ("JellyFusion-v" + $Version + ".zip")
-$Meta   = Join-Path $Pub  "meta.json"
+$Root = $PSScriptRoot
+$Proj = Join-Path $Root "src\JellyFusion\JellyFusion.csproj"
+$Pub  = Join-Path $Root "publish"
+$Rel  = Join-Path $Root "releases"
+$Meta = Join-Path $Pub  "meta.json"
+
+[xml]$projXml = Get-Content -LiteralPath $Proj -Raw
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    $Version = $projXml.Project.PropertyGroup.Version
+}
+if ([string]::IsNullOrWhiteSpace($Version)) {
+    throw "Could not determine plugin version from parameter or csproj"
+}
+
+$versionParts = $Version.Split('.')
+if ($versionParts.Count -lt 3 -or $versionParts.Count -gt 4) {
+    throw "Version must have 3 or 4 numeric segments (for example 3.0.6 or 3.0.6.1)"
+}
+if ($versionParts | Where-Object { $_ -notmatch '^\d+$' }) {
+    throw "Version contains non-numeric segments: $Version"
+}
+
+$assemblyVersion = if ($versionParts.Count -eq 3) { "$Version.0" } else { $Version }
+if ([string]::IsNullOrWhiteSpace($Changelog)) {
+    $Changelog = "Release $Version"
+}
+
+$ZipOut = Join-Path $Rel ("JellyFusion-v" + $Version + ".zip")
 
 Write-Host "==> Cleaning previous build"
 if (Test-Path $Pub) { Remove-Item $Pub -Recurse -Force }
@@ -22,8 +46,8 @@ dotnet publish $Proj `
     --configuration Release `
     --output $Pub `
     "-p:Version=$Version" `
-    "-p:AssemblyVersion=$Version.0" `
-    "-p:FileVersion=$Version.0"
+    "-p:AssemblyVersion=$assemblyVersion" `
+    "-p:FileVersion=$assemblyVersion"
 if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed" }
 
 Write-Host "==> Publish folder contents:"
@@ -39,7 +63,7 @@ Write-Host "==> Writing meta.json"
 $timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")
 $metaObj = [ordered]@{
     category    = "General"
-    changelog   = "Release $Version - see manifest.json for full changelog"
+    changelog   = $Changelog
     description = "All-in-one Jellyfin plugin: Netflix-style banner with trailers, smart badges (LAT/SUB/NUEVO/KID), configurable studios, home rails (Top 10), 7 themes, navigation shortcuts, Discord/Telegram notifications and a 4-language UI (ES/EN/PT/FR)."
     guid        = $Guid
     imagePath   = ""
@@ -48,7 +72,7 @@ $metaObj = [ordered]@{
     owner       = $Owner
     targetAbi   = "10.10.0.0"
     timestamp   = $timestamp
-    version     = ($Version + ".0")
+    version     = $assemblyVersion
 }
 $metaObj | ConvertTo-Json -Depth 4 | Set-Content -Path $Meta -Encoding utf8
 
@@ -64,19 +88,29 @@ Write-Host ("    MD5: " + $md5)
 Write-Host "==> Updating manifest.json"
 $manifestPath = Join-Path $Root "manifest.json"
 $manifestRaw = Get-Content $manifestPath -Raw -Encoding UTF8 | ConvertFrom-Json
-# Force array: Jellyfin manifest MUST be a JSON array at root.
 $manifest = @($manifestRaw)
-$targetVersion = $Version + ".0"
+$targetVersion = $assemblyVersion
+$sourceUrl = "https://github.com/$Owner/$Repo/releases/download/v$Version/JellyFusion-v$Version.zip"
 $ver = $manifest[0].versions | Where-Object { $_.version -eq $targetVersion } | Select-Object -First 1
 if ($ver) {
     $ver.checksum  = $md5
-    # Keep strict ISO 8601 - NEVER strip T or Z.
+    $ver.changelog = $Changelog
+    $ver.sourceUrl = $sourceUrl
     $ver.timestamp = $timestamp
     Write-Host "    Updated existing entry for $targetVersion"
 } else {
-    Write-Warning "manifest.json has no entry for version $targetVersion - leaving it untouched."
+    $newEntry = [ordered]@{
+        version   = $targetVersion
+        changelog = $Changelog
+        targetAbi = "10.10.0.0"
+        sourceUrl = $sourceUrl
+        checksum  = $md5
+        timestamp = $timestamp
+    }
+    $manifest[0].versions = @($newEntry) + @($manifest[0].versions)
+    Write-Host "    Added new manifest entry for $targetVersion"
 }
-# Preserve the array wrapper. -AsArray is PS 7+; fall back to manual wrap for PS 5.
+
 try {
     $json = $manifest | ConvertTo-Json -Depth 10 -AsArray
 } catch {
@@ -92,4 +126,3 @@ Write-Host ("    ZIP:      " + $ZipOut)
 Write-Host ("    Size:     " + (Get-Item $ZipOut).Length + " bytes")
 Write-Host ("    MD5:      " + $md5)
 Write-Host ("    Manifest: " + $manifestPath)
-

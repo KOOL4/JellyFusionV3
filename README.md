@@ -60,7 +60,7 @@ The plugin interface is fully translated into:
 1. In Jellyfin, go to **Dashboard → Plugins → Repositories**
 2. Add the following URL:
    ```
-   https://raw.githubusercontent.com/YOUR_GITHUB_USERNAME/jellyfusion/main/manifest.json
+   https://raw.githubusercontent.com/KOOL4/JellyFusionV3/main/manifest.json
    ```
 3. Go to **Dashboard → Plugins → Catalog**
 4. Find **JellyFusion** and install it
@@ -68,7 +68,7 @@ The plugin interface is fully translated into:
 
 ### Option 2 — Manual
 
-1. Download the latest `.zip` from [Releases](https://github.com/YOUR_GITHUB_USERNAME/jellyfusion/releases)
+1. Download the latest `.zip` from [Releases](https://github.com/KOOL4/JellyFusionV3/releases)
 2. Extract the `.dll` file into your Jellyfin plugins folder:
    - Linux: `/var/lib/jellyfin/plugins/JellyFusion/`
    - Windows: `%APPDATA%\Jellyfin\plugins\JellyFusion\`
@@ -89,7 +89,7 @@ For the Editor's Choice slider to appear, you need one of:
 **C) Manual injection**
 - Open `jellyfin-web/index.html` and add before `</body>`:
   ```html
-  <script plugin="JellyFusion" defer="defer" src="/jellyfusion/script"></script>
+  <script plugin="JellyFusion" defer="defer" src="/jellyfusion/bootstrap.js"></script>
   ```
 
 ---
@@ -111,7 +111,7 @@ Go to **Dashboard → Plugins → JellyFusion** to access the full configuration
 Requirements: .NET 8 SDK
 
 ```bash
-git clone https://github.com/YOUR_GITHUB_USERNAME/jellyfusion
+git clone https://github.com/KOOL4/JellyFusionV3
 cd jellyfusion
 dotnet build src/JellyFusion/JellyFusion.csproj --configuration Release
 ```

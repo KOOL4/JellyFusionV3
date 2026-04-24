@@ -16,9 +16,12 @@ public class BadgeMiddleware : IMiddleware
     private readonly ImageCacheService    _cache;
     private readonly ILogger<BadgeMiddleware> _logger;
 
-    // Matches /Items/{id}/Images/Primary and /Items/{id}/Images/Thumb
+    // Matches /Items/{id}/Images/Primary and /Items/{id}/Images/Thumb.
+    // Backdrops are intentionally excluded: the badge feature only exposes
+    // toggles for posters/thumbs, and overlaying badges onto banner
+    // backdrops produces unexpected artifacts on the home page.
     private static readonly System.Text.RegularExpressions.Regex ImagePathRegex =
-        new(@"/Items/([0-9a-f-]+)/Images/(Primary|Thumb|Backdrop)",
+        new(@"/Items/([0-9a-f-]+)/Images/(Primary|Thumb)",
             System.Text.RegularExpressions.RegexOptions.IgnoreCase |
             System.Text.RegularExpressions.RegexOptions.Compiled);
 

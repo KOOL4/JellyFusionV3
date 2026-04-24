@@ -1,4 +1,5 @@
 using JellyFusion.Configuration;
+using JellyFusion.Modules.Studios;
 using Jellyfin.Data.Enums;
 using MediaBrowser.Controller.Entities;
 using MediaBrowser.Controller.Library;
@@ -179,10 +180,12 @@ public class HomeService
             .Select(ToCardDto)
             .Prepend(new
             {
-                id    = "__seed__",
-                name  = $"Porque viste {seed.Name}",
-                kind  = "SeedCard",
-                year  = seed.ProductionYear
+                id        = "__seed__",
+                detailsId = seed.Id,
+                name      = $"Porque viste {seed.Name}",
+                kind      = "SeedCard",
+                year      = seed.ProductionYear,
+                imageUrl  = $"/Items/{seed.Id}/Images/Primary"
             })
             .ToArray();
     }
@@ -266,7 +269,9 @@ public class HomeService
                 id       = s.Name,
                 name     = s.Name,
                 kind     = "Studio",
+                imageUrl = s.LogoUrl,
                 logoUrl  = s.LogoUrl,
+                browseUrl = StudiosService.GetStudioBrowseUrl(s),
                 gradient = s.Gradient,
                 invert   = s.Invert,
                 tags     = s.Tags
@@ -308,12 +313,13 @@ public class HomeService
         return _library.GetItemsResult(query).Items
             .Select((item, i) => (object)new
             {
-                id       = item.Id,
-                rank     = i + 1,
-                name     = item.Name,
-                year     = item.ProductionYear,
-                kind     = item.GetType().Name,
-                imageUrl = $"/Items/{item.Id}/Images/Primary"
+                id        = item.Id,
+                detailsId = item.Id,
+                rank      = i + 1,
+                name      = item.Name,
+                year      = item.ProductionYear,
+                kind      = item.GetType().Name,
+                imageUrl  = $"/Items/{item.Id}/Images/Primary"
             })
             .ToArray();
     }
@@ -331,15 +337,16 @@ public class HomeService
         {
             list.Add(new
             {
-                id       = v.TryGetProperty("id", out var id) ? id.GetInt32() : 0,
-                rank     = rank++,
-                name     = v.TryGetProperty("title",    out var t1) ? t1.GetString()
-                         : v.TryGetProperty("name",     out var t2) ? t2.GetString() : "",
-                year     = 0,
-                kind     = mediaType == "tv" ? "Series" : "Movie",
-                imageUrl = v.TryGetProperty("poster_path", out var p) && p.GetString() is string ps
-                           ? $"https://image.tmdb.org/t/p/w500{ps}"
-                           : null
+                id        = v.TryGetProperty("id", out var id) ? id.GetInt32() : 0,
+                detailsId = (Guid?)null,
+                rank      = rank++,
+                name      = v.TryGetProperty("title",    out var t1) ? t1.GetString()
+                          : v.TryGetProperty("name",     out var t2) ? t2.GetString() : "",
+                year      = 0,
+                kind      = mediaType == "tv" ? "Series" : "Movie",
+                imageUrl  = v.TryGetProperty("poster_path", out var p) && p.GetString() is string ps
+                            ? $"https://image.tmdb.org/t/p/w500{ps}"
+                            : null
             });
         }
         return list.ToArray();
@@ -362,12 +369,13 @@ public class HomeService
             {
                 list.Add(new
                 {
-                    id       = v.TryGetProperty("id",    out var id)   ? id.GetString() : "",
-                    rank     = rank++,
-                    name     = v.TryGetProperty("title", out var t)    ? t.GetString()  : "",
-                    year     = v.TryGetProperty("release_year", out var y) ? y.GetInt32() : 0,
-                    kind     = mediaType == "tv" ? "Series" : "Movie",
-                    imageUrl = v.TryGetProperty("poster", out var pp)  ? pp.GetString() : null
+                    id        = v.TryGetProperty("id",    out var id)   ? id.GetString() : "",
+                    detailsId = (Guid?)null,
+                    rank      = rank++,
+                    name      = v.TryGetProperty("title", out var t)    ? t.GetString()  : "",
+                    year      = v.TryGetProperty("release_year", out var y) ? y.GetInt32() : 0,
+                    kind      = mediaType == "tv" ? "Series" : "Movie",
+                    imageUrl  = v.TryGetProperty("poster", out var pp)  ? pp.GetString() : null
                 });
             }
             return list.ToArray();
@@ -397,12 +405,13 @@ public class HomeService
             var media = v.TryGetProperty(mediaType == "tv" ? "show" : "movie", out var m) ? m : v;
             list.Add(new
             {
-                id       = media.TryGetProperty("ids",   out var ids) && ids.TryGetProperty("trakt", out var tid) ? tid.GetInt32() : 0,
-                rank     = rank++,
-                name     = media.TryGetProperty("title", out var t)   ? t.GetString() : "",
-                year     = media.TryGetProperty("year",  out var y)   ? y.GetInt32()  : 0,
-                kind     = mediaType == "tv" ? "Series" : "Movie",
-                imageUrl = (string?)null
+                id        = media.TryGetProperty("ids",   out var ids) && ids.TryGetProperty("trakt", out var tid) ? tid.GetInt32() : 0,
+                detailsId = (Guid?)null,
+                rank      = rank++,
+                name      = media.TryGetProperty("title", out var t)   ? t.GetString() : "",
+                year      = media.TryGetProperty("year",  out var y)   ? y.GetInt32()  : 0,
+                kind      = mediaType == "tv" ? "Series" : "Movie",
+                imageUrl  = (string?)null
             });
         }
         return list.ToArray();
@@ -423,13 +432,14 @@ public class HomeService
                     .Take(max)
                     .Select(v => (object)new
                     {
-                        id       = v.TryGetProperty("id", out var id) ? id.GetInt32() : 0,
-                        name     = v.TryGetProperty("title", out var t) ? t.GetString() : "",
-                        year     = 0,
-                        kind     = "Upcoming",
-                        imageUrl = v.TryGetProperty("poster_path", out var p) && p.GetString() is string ps
-                                   ? $"https://image.tmdb.org/t/p/w500{ps}" : null,
-                        release  = v.TryGetProperty("release_date", out var r) ? r.GetString() : null
+                        id        = v.TryGetProperty("id", out var id) ? id.GetInt32() : 0,
+                        detailsId = (Guid?)null,
+                        name      = v.TryGetProperty("title", out var t) ? t.GetString() : "",
+                        year      = 0,
+                        kind      = "Upcoming",
+                        imageUrl  = v.TryGetProperty("poster_path", out var p) && p.GetString() is string ps
+                                    ? $"https://image.tmdb.org/t/p/w500{ps}" : null,
+                        release   = v.TryGetProperty("release_date", out var r) ? r.GetString() : null
                     })
                     .ToArray();
             }
@@ -443,11 +453,12 @@ public class HomeService
 
     private static object ToCardDto(BaseItem item) => new
     {
-        id       = item.Id,
-        name     = item.Name,
-        year     = item.ProductionYear,
-        kind     = item.GetType().Name,
-        rating   = item.CommunityRating,
-        imageUrl = $"/Items/{item.Id}/Images/Primary"
+        id        = item.Id,
+        detailsId = item.Id,
+        name      = item.Name,
+        year      = item.ProductionYear,
+        kind      = item.GetType().Name,
+        rating    = item.CommunityRating,
+        imageUrl  = $"/Items/{item.Id}/Images/Primary"
     };
 }

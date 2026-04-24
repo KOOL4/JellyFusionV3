@@ -9,6 +9,14 @@
     "imageUrl":  "https://raw.githubusercontent.com/KOOL4/JellyFusionV3/main/assets/logo.png",
     "versions":  [
                      {
+                         "version":  "3.0.6.1",
+                         "changelog":  "V3.0.6.1 - copia derivada de v3.0.6 para diferenciar la version modificada. Incluye fixes en home rails (imageUrl/logoUrl/browseUrl/detailsId), exclusion de backdrops del badge middleware y ajustes del tooling de release para soportar versiones de 4 segmentos.",
+                         "targetAbi":  "10.10.0.0",
+                         "sourceUrl":  "https://github.com/KOOL4/JellyFusionV3/releases/download/v3.0.6.1/JellyFusion-v3.0.6.1.zip",
+                         "checksum":  "4bbd9e8962ee4ceb574fc832f75cb48d",
+                         "timestamp":  "2026-04-24T19:58:15Z"
+                     },
+                     {
                          "version":  "3.0.6.0",
                          "changelog":  "V3.0.6 - Follow-up sobre v3.0.5: el debug badge mostraba \u0027no banner items (check Banner tab) | rails ERR\u0027 y NINGUNA feature (banner, tag, estudios) se renderizaba. Causas identificadas y corregidas: (1) CONTROLLER: GetHomeRails y GetSliderItems ahora tienen outer try/catch - ambos endpoints devuelven array vacio en vez de 500 ante cualquier excepcion, por lo que el badge \u0027rails ERR\u0027 no puede volver a aparecer. Agregado logging INFO en slider con mode/userId/count para que el log de Jellyfin muestre exactamente por que vinieron 0 items. (2) HOMESERVICE: outer try/catch completo en BuildRailsAsync; null-safety sobre Plugin.Instance.Configuration.Home y cfg.Rails (cubre el caso donde XmlSerializer devuelve Rails=null tras persistir un config de version anterior); GetUserById en su propio try/catch para que un claim invalido no aborte todo el payload; titulos i18n por defecto cuando rail.Title es null; emite el flag showRank para que la numeracion Top-10 del bootstrap aparezca. (3) SLIDERSERVICE: nuevo GetFallbackAnyAsync - si Random/Favourites/Collections/New devuelve 0 items, cae a un pull ancho sin filtros de Movies+Series para que el banner NUNCA este vacio en una libreria que tenga algo. Quitado IsVirtualItem=false de GetRandomAsync que silenciosamente filtraba todo en algunos installs 10.10. (4) PLUGIN_ID FIX (carried from v3.0.5 review): index.html enviaba a1b2c3d4-e5f6-7890-abcd-ef1234567890 que NO coincide con el GUID real del plugin b7c8d9e0-f1a2-3b4c-5d6e-7f8090a1b2c3. Cada ApiClient.updatePluginConfiguration iba a un endpoint 404; solo se guardaba por el fetch fallback. GUID corregido en index.html, build.sh y .github/workflows/release.yml. Se mantienen los fixes de v3.0.5 (quitar MutationObserver runaway, startPolling, guard data-jf-rendering).",
                          "targetAbi":  "10.10.0.0",
