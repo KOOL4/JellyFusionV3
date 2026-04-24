@@ -1,0 +1,21 @@
+﻿[
+{
+    "guid":  "b7c8d9e0-f1a2-3b4c-5d6e-7f8090a1b2c3",
+    "name":  "JellyFusion",
+    "description":  "All-in-one Jellyfin plugin V3: Netflix-style banner with trailers, smart badges (LAT/SUB/NUEVO/KID), configurable studios, home rails (Top 10), 7 themes, navigation shortcuts, Discord/Telegram notifications and a 4-language UI (ES/EN/PT/FR).",
+    "overview":  "Reemplaza 4-5 plugins individuales con una sola instalacion. Banner con traileres TMDB, badges inteligentes, studios configurables, Top 10 rails y tema visual por plataforma.",
+    "owner":  "KOOL4",
+    "category":  "General",
+    "imageUrl":  "https://raw.githubusercontent.com/KOOL4/JellyFusionV3/main/assets/logo.png",
+    "versions":  [
+                     {
+                         "version":  "3.0.3.0",
+                         "changelog":  "V3.0.3 - HOTFIX sobre v3.0.2 para el bug de mojibake en /web/index.html. SINTOMA observado: la home de Jellyfin se renderizaba como basura binaria (miles de caracteres \u0027i¿½\u0027 de reemplazo UTF-8) con el badge \u0027JellyFusion 3.0.2 loaded\u0027 visible abajo a la derecha. CAUSA: Jellyfin monta UseResponseCompression ANTES de UseStaticFiles en su pipeline, y nuestro middleware se registraba via IStartupFilter, envolviendo TODO el pipeline. Eso hacia que para cuando el buffer recibia el index.html, ya estaba comprimido en gzip. Al decodificarlo como UTF-8 salia basura, le inyectabamos la etiqueta \u003cscript\u003e al final, quitabamos Content-Encoding, y le enviabamos al browser texto mojibake mas nuestro bootstrap (que cargaba el badge - unica prueba visible de que la inyeccion ocurria). FIX: (A) antes de llamar next() en /web/index.html eliminamos el header Accept-Encoding del request, de modo que la compresion middleware cree que el cliente no acepta gzip/br y pasa el archivo en UTF-8 crudo; (B) red de seguridad defensiva: si por cualquier razon el Content-Encoding del response NO es vacio/identity, saltamos la inyeccion y pasamos los bytes sin tocar - preferible no banner que shell corrupto. Todo el resto de v3.0.2 se mantiene: IHttpResponseBodyFeature swap para SendFileAsync, refreshBannerPreviewBlock/refreshThemePreviewBlock surgicos, inflight guard para dual-bind sin triple-fire, version badges al dia.",
+                         "targetAbi":  "10.10.0.0",
+                         "sourceUrl":  "https://github.com/KOOL4/JellyFusionV3/releases/download/v3.0.3/JellyFusion-v3.0.3.zip",
+                         "checksum":  "dd08619d4228b62061436785dce34b90",
+                         "timestamp":  "2026-04-24T00:38:07Z"
+                     }
+                 ]
+}
+]
