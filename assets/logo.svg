@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="45%" r="65%">
+      <stop offset="0%" stop-color="#2a0a4a"/>
+      <stop offset="55%" stop-color="#12042a"/>
+      <stop offset="100%" stop-color="#050010"/>
+    </radialGradient>
+    <linearGradient id="bell" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"  stop-color="#f56bff"/>
+      <stop offset="45%" stop-color="#9a4bff"/>
+      <stop offset="100%" stop-color="#5a1fcc"/>
+    </linearGradient>
+    <linearGradient id="bellGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"  stop-color="#ffffff" stop-opacity="0.85"/>
+      <stop offset="60%" stop-color="#f56bff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#f56bff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="tent" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"  stop-color="#c48bff"/>
+      <stop offset="100%" stop-color="#7a2bff" stop-opacity="0.1"/>
+    </linearGradient>
+    <filter id="neon" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="6" result="b1"/>
+      <feGaussianBlur stdDeviation="14" result="b2"/>
+      <feMerge>
+        <feMergeNode in="b2"/>
+        <feMergeNode in="b1"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background disc -->
+  <circle cx="256" cy="256" r="256" fill="url(#bg)"/>
+
+  <!-- Faint particles -->
+  <g fill="#c48bff" opacity="0.55">
+    <circle cx="90"  cy="110" r="2"/>
+    <circle cx="130" cy="380" r="1.5"/>
+    <circle cx="420" cy="140" r="2"/>
+    <circle cx="390" cy="400" r="1.5"/>
+    <circle cx="75"  cy="260" r="1.2"/>
+    <circle cx="450" cy="280" r="1.2"/>
+    <circle cx="250" cy="60"  r="1.5"/>
+  </g>
+
+  <!-- Jellyfish tentacles (behind bell) -->
+  <g stroke="url(#tent)" stroke-linecap="round" fill="none" filter="url(#neon)">
+    <path d="M170 270 C 165 320, 185 360, 170 420"  stroke-width="7" opacity="0.95"/>
+    <path d="M205 278 C 215 340, 200 380, 215 450"  stroke-width="6" opacity="0.95"/>
+    <path d="M256 280 C 245 350, 265 400, 250 470"  stroke-width="8" opacity="1"/>
+    <path d="M300 278 C 295 350, 315 390, 305 450"  stroke-width="6" opacity="0.95"/>
+    <path d="M342 270 C 355 320, 335 370, 350 430"  stroke-width="7" opacity="0.95"/>
+    <path d="M140 260 C 125 310, 155 345, 135 395"  stroke-width="4" opacity="0.7"/>
+    <path d="M372 260 C 390 305, 360 345, 385 400"  stroke-width="4" opacity="0.7"/>
+  </g>
+
+  <!-- Outer neon aura -->
+  <ellipse cx="256" cy="210" rx="150" ry="110" fill="url(#bellGlow)" opacity="0.35"/>
+
+  <!-- Jellyfish bell -->
+  <g filter="url(#neon)">
+    <path d="M110 235 C 110 140, 185 90, 256 90 C 327 90, 402 140, 402 235
+             C 402 250, 395 265, 382 272
+             C 372 260, 358 258, 348 268
+             C 338 278, 322 278, 312 268
+             C 302 258, 286 258, 276 268
+             C 266 278, 250 278, 240 268
+             C 230 258, 214 258, 204 268
+             C 194 278, 178 278, 168 268
+             C 158 258, 144 260, 134 272
+             C 120 266, 112 252, 110 235 Z"
+          fill="url(#bell)"/>
+    <!-- highlight -->
+    <path d="M152 150 C 200 110, 280 110, 335 140
+             C 305 135, 245 130, 195 155
+             C 180 162, 165 160, 152 150 Z"
+          fill="#ffffff" opacity="0.55"/>
+    <!-- inner bell rim -->
+    <path d="M140 225 C 190 205, 320 205, 378 225"
+          stroke="#ffd8ff" stroke-width="2.5" fill="none" opacity="0.7"/>
+  </g>
+
+  <!-- Ring of text curvature (subtle brand mark) -->
+  <circle cx="256" cy="256" r="244" fill="none" stroke="#9a4bff" stroke-width="1" opacity="0.5"/>
+</svg>
