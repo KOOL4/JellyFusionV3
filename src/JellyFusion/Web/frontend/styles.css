@@ -1,0 +1,340 @@
+/* ────────────────────────────────────────────────────────────
+ *  JellyFusion · frontend/styles.css   (v2)
+ *
+ *  Baseline structure + functional hover overlay + scroll snap.
+ *  Still NO theming and minimal animations — focus is on the
+ *  components looking right with mock data.
+ *
+ *  Naming: BEM-ish (.jf-block, .jf-block__elem, .jf-block--mod).
+ *  Scope: every selector starts with .jf-* — never collide with
+ *  Jellyfin's .emby-* / .skinHeader / .cardImage.
+ * ──────────────────────────────────────────────────────────── */
+
+/* ── Hide Jellyfin underneath ────────────────────────────── */
+html.jf-app-active body > *:not(#jf-app):not(script):not(style):not(link) {
+    display: none !important;
+}
+
+/* ── Root ────────────────────────────────────────────────── */
+#jf-app, .jf-app {
+    position: fixed;
+    inset: 0;
+    overflow: auto;
+    background: #0b0d12;
+    color: #fff;
+    font-family: -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    z-index: 999;
+}
+
+.jf-layout {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ── Top bar ─────────────────────────────────────────────── */
+.jf-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 32px;
+    background: rgba(0, 0, 0, .55);
+    backdrop-filter: blur(20px);
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.jf-brand {
+    font-weight: 800;
+    font-size: 18px;
+    letter-spacing: .02em;
+}
+
+.jf-topnav {
+    display: flex;
+    gap: 6px;
+}
+
+.jf-navlink {
+    color: #c9c9c9;
+    text-decoration: none;
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+}
+.jf-navlink:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, .08);
+}
+
+/* ── Hero ────────────────────────────────────────────────── */
+.jf-hero-slot { flex: 0 0 auto; }
+
+.jf-hero {
+    position: relative;
+    height: 56vh;
+    min-height: 360px;
+    overflow: hidden;
+}
+.jf-hero--empty { display: none; }
+
+.jf-hero__bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(.55);
+}
+/* Bottom darken so text always reads */
+.jf-hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(0,0,0,.85) 100%);
+    pointer-events: none;
+}
+
+.jf-hero__content {
+    position: relative;
+    padding: 60px 32px;
+    max-width: 60%;
+    z-index: 1;
+}
+
+.jf-hero__title {
+    margin: 0 0 8px;
+    font-size: clamp(28px, 3.4vw, 48px);
+    line-height: 1.1;
+    text-shadow: 0 4px 20px rgba(0,0,0,.6);
+}
+
+.jf-hero__meta {
+    margin: 0 0 12px;
+    font-size: 13px;
+    color: #cdcdcd;
+    font-weight: 600;
+}
+
+.jf-hero__desc {
+    margin: 0 0 20px;
+    font-size: 15px;
+    line-height: 1.45;
+    color: #e0e0e0;
+    max-width: 640px;
+    text-shadow: 0 2px 8px rgba(0,0,0,.6);
+}
+
+.jf-hero__cta {
+    display: inline-flex;
+    gap: 10px;
+}
+
+.jf-hero__btn {
+    appearance: none;
+    border: 0;
+    padding: 10px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: transform .15s, background .15s;
+}
+.jf-hero__btn:hover { transform: scale(1.04); }
+.jf-hero__btn--primary { background: #fff; color: #111; }
+.jf-hero__btn--primary:hover { background: #e9e9e9; }
+.jf-hero__btn--ghost   { background: rgba(109, 109, 110, .7); color: #fff; backdrop-filter: blur(12px); }
+
+/* Hero arrows (sides) */
+.jf-hero__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(0,0,0,.5);
+    backdrop-filter: blur(20px);
+    color: #fff;
+    font-size: 28px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .25s, background .15s;
+}
+.jf-hero:hover .jf-hero__arrow { opacity: 1; }
+.jf-hero__arrow:hover { background: rgba(255,255,255,.2); }
+.jf-hero__arrow--prev { left: 16px; }
+.jf-hero__arrow--next { right: 16px; }
+
+/* Hero dots (bottom-right) */
+.jf-hero__dots {
+    position: absolute;
+    right: 32px;
+    bottom: 24px;
+    display: flex;
+    gap: 8px;
+    z-index: 2;
+}
+.jf-hero__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 0;
+    padding: 0;
+    background: rgba(255,255,255,.35);
+    cursor: pointer;
+    transition: background .2s, width .2s;
+}
+.jf-hero__dot:hover { background: rgba(255,255,255,.7); }
+.jf-hero__dot--active {
+    background: #fff;
+    width: 22px;
+    border-radius: 4px;
+}
+
+/* ── Rows slot ───────────────────────────────────────────── */
+.jf-rows-slot {
+    flex: 1 1 auto;
+    padding: 24px 0 60px;
+}
+
+.jf-row {
+    margin: 28px 0;
+}
+
+.jf-row__header {
+    padding: 0 32px 10px;
+}
+
+.jf-row__title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: .01em;
+}
+
+.jf-row__scroller {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    overflow-y: visible;        /* allow card hover-lift to escape vertically */
+    padding: 8px 32px 24px;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 32px;
+    scrollbar-width: none;
+}
+.jf-row__scroller::-webkit-scrollbar { display: none; }
+
+/* ── Card ────────────────────────────────────────────────── */
+.jf-card {
+    flex: 0 0 auto;
+    cursor: pointer;
+    background: #15171c;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    scroll-snap-align: start;
+    transition: transform .25s ease, box-shadow .25s ease;
+    outline: none;
+}
+
+.jf-card:hover,
+.jf-card:focus-visible {
+    transform: translateY(-6px) scale(1.04);
+    box-shadow: 0 14px 30px rgba(0,0,0,.55), 0 0 0 2px rgba(0,164,220,.5);
+    z-index: 2;
+}
+
+.jf-card__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.jf-card__title {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    background: linear-gradient(transparent, rgba(0, 0, 0, .9));
+    pointer-events: none;
+    transition: opacity .2s ease;
+}
+.jf-card:hover .jf-card__title,
+.jf-card:focus-visible .jf-card__title { opacity: 0; }
+
+/* Hidden overlay (revealed on hover) */
+.jf-card__overlay {
+    position: absolute;
+    inset: 0;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    background: linear-gradient(180deg, rgba(0,0,0,.05) 0%, rgba(0,0,0,.85) 60%, rgba(0,0,0,.95) 100%);
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events: none;
+}
+.jf-card:hover .jf-card__overlay,
+.jf-card:focus-visible .jf-card__overlay {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.jf-card__overlay-title {
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 4px;
+    line-height: 1.2;
+}
+.jf-card__overlay-meta {
+    font-size: 11px;
+    color: #b9b9b9;
+    margin-bottom: 6px;
+    font-weight: 600;
+}
+.jf-card__overlay-desc {
+    margin: 0 0 10px;
+    font-size: 11px;
+    color: #d8d8d8;
+    line-height: 1.35;
+    /* clamp to 3 lines */
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.jf-card__overlay-actions {
+    display: flex;
+    gap: 6px;
+}
+.jf-card__btn {
+    appearance: none;
+    border: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1;
+}
+.jf-card__btn--primary { background: #fff; color: #111; }
+.jf-card__btn--ghost   { background: rgba(255,255,255,.18); color: #fff; }
+
+/* Format-specific dimensions */
+.jf-card--portrait  { width: 200px; aspect-ratio: 2/3;  }
+.jf-card--landscape { width: 300px; aspect-ratio: 16/9; }
+.jf-card--square    { width: 200px; aspect-ratio: 1/1;  }
+.jf-card--small     { width: 140px; aspect-ratio: 2/3;  }
+.jf-card--small .jf-card__overlay { padding: 10px; }
+.jf-card--small .jf-card__overlay-title { font-size: 12px; }
