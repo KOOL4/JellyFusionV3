@@ -1,0 +1,127 @@
+/* ────────────────────────────────────────────────────────────
+ *  Netflix theme — full reskin via CSS custom properties only.
+ *
+ *  The selectors below redefine the --jf-* tokens that core
+ *  styles.css consumes. We never write rules like
+ *  .jf-app--netflix .jf-card { ... } — the swap from default
+ *  to Netflix happens because the theme CSS link is loaded;
+ *  removing the link reverts to the defaults baked into
+ *  the core stylesheet.
+ *
+ *  Design choices:
+ *    - Pitch-black background (#141414) is Netflix's signature.
+ *    - Crimson #E50914 for the brand accent + button background.
+ *    - Sharp 4px corners (Netflix UI is famously rectangular).
+ *    - 1.5x scale on hover (vs default 1.42) — Netflix card pop
+ *      is noticeably aggressive.
+ *    - Red glow shadow on hover so the active card reads as
+ *      "selected" without an extra ring class.
+ *    - Heavy uppercase on titles where space allows.
+ * ──────────────────────────────────────────────────────────── */
+
+.jf-app {
+    /* Colors */
+    --jf-color-bg:            #141414;
+    --jf-color-surface:       #181818;
+    --jf-color-text:          #ffffff;
+    --jf-color-text-muted:    #b3b3b3;
+    --jf-color-primary:       #e50914;
+    --jf-color-primary-hover: #b20710;
+    --jf-color-ring:          rgba(229, 9, 20, .85);
+
+    /* Cards — sharp corners, aggressive hover */
+    --jf-card-radius:         4px;
+    --jf-card-bg:             #181818;
+    --jf-card-hover-scale:    1.5;
+    --jf-card-hover-shadow:
+        0 0 0 3px #e50914,
+        0 12px 30px rgba(229, 9, 20, .35),
+        0 28px 70px rgba(0, 0, 0, .85);
+    --jf-card-overlay-bg:
+        linear-gradient(180deg,
+            rgba(20, 20, 20, 0)    0%,
+            rgba(20, 20, 20, .5)  45%,
+            rgba(20, 20, 20, .95) 75%,
+            rgba(20, 20, 20, 1)  100%);
+    --jf-card-title-weight:   700;
+    --jf-card-title-tx:       none;
+    --jf-card-hover-delay:    .12s;
+
+    /* Hero — full bleed dark gradient */
+    --jf-hero-height:         62vh;
+    --jf-hero-min-height:     420px;
+    --jf-hero-overlay:
+        linear-gradient(90deg,
+            rgba(20,20,20,.95) 0%,
+            rgba(20,20,20,.55) 35%,
+            rgba(20,20,20,.0)  70%),
+        linear-gradient(180deg, transparent 60%, rgba(20,20,20,.95) 100%);
+    --jf-hero-title-weight:   900;
+    --jf-hero-title-tx:       none;
+
+    /* Buttons */
+    --jf-btn-primary-bg:      #ffffff;
+    --jf-btn-primary-fg:      #000000;
+    --jf-btn-ghost-bg:        rgba(109, 109, 110, .7);
+    --jf-btn-ghost-fg:        #ffffff;
+    --jf-btn-radius:          4px;
+
+    /* Topbar — sticky, mostly transparent over content */
+    --jf-topbar-bg:
+        linear-gradient(180deg, rgba(20,20,20,.95) 0%, rgba(20,20,20,0) 100%);
+    --jf-topbar-blur:         0px;
+    --jf-topbar-link-color:   #e5e5e5;
+    --jf-topbar-link-hover:   transparent;     /* Netflix uses underline, not bg */
+    --jf-topbar-link-active:  transparent;
+
+    /* Rows — tighter vertical rhythm */
+    --jf-row-gap:             6px;             /* iconic Netflix tight grid */
+    --jf-row-padding-x:       3.6vw;
+    --jf-row-title-weight:    600;
+    --jf-row-title-tx:        none;
+
+    /* Type — Netflix Sans falls back to Helvetica which is the
+       intended substitute. We don't bundle the font (license). */
+    --jf-font-family:         'Netflix Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+    /* Motion — slightly snappier than default */
+    --jf-ease:                cubic-bezier(.25, .8, .25, 1);
+}
+
+/* Netflix-specific touches that go beyond what the variables
+   alone can express. Scoped via the theme link being loaded —
+   when the link is removed, these rules vanish with it. */
+
+.jf-brand {
+    color: #e50914;
+    font-weight: 900;
+    letter-spacing: .05em;
+}
+
+/* Top nav: red underline on hover (Netflix pattern) */
+.jf-navlink { position: relative; }
+.jf-navlink::after {
+    content: '';
+    position: absolute;
+    left: 14px; right: 14px; bottom: 4px;
+    height: 2px;
+    background: #e50914;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform .25s var(--jf-ease);
+}
+.jf-navlink:hover::after { transform: scaleX(1); }
+
+/* "Match %" badge slot in the overlay (populated by config.js) */
+.jf-card__match {
+    color: #46d369;
+    font-weight: 800;
+    font-size: 11px;
+    margin-bottom: 4px;
+    letter-spacing: .03em;
+}
+
+/* Hero title gets a touch of red glow when really long */
+.jf-hero__title {
+    text-shadow: 0 4px 24px rgba(0, 0, 0, .8);
+}

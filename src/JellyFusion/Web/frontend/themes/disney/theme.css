@@ -1,0 +1,49 @@
+/* ────────────────────────────────────────────────────────────
+ *  Disney+ theme — deep navy palette, premium feel.
+ *  Same variable-only override pattern as the Netflix theme.
+ * ──────────────────────────────────────────────────────────── */
+.jf-app {
+    --jf-color-bg:            #040714;
+    --jf-color-surface:       #10193a;
+    --jf-color-text:          #ffffff;
+    --jf-color-text-muted:    #a8b2cc;
+    --jf-color-primary:       #0063e5;
+    --jf-color-primary-hover: #0050b8;
+    --jf-color-ring:          rgba(0, 99, 229, .85);
+
+    --jf-card-radius:         10px;
+    --jf-card-bg:             #10193a;
+    --jf-card-hover-scale:    1.4;
+    --jf-card-hover-shadow:
+        0 0 0 2px rgba(0, 99, 229, .9),
+        0 14px 32px rgba(0, 99, 229, .25),
+        0 28px 70px rgba(0, 0, 0, .8);
+    --jf-card-overlay-bg:
+        linear-gradient(180deg,
+            rgba(4, 7, 20, 0)    0%,
+            rgba(4, 7, 20, .55) 45%,
+            rgba(4, 7, 20, .95) 80%);
+    --jf-card-title-weight:   700;
+
+    --jf-hero-overlay:
+        linear-gradient(90deg,
+            rgba(4,7,20,.92) 0%,
+            rgba(4,7,20,.5)  35%,
+            rgba(4,7,20,0)   70%),
+        linear-gradient(180deg, transparent 55%, rgba(4,7,20,.95) 100%);
+    --jf-hero-title-weight:   800;
+
+    --jf-btn-primary-bg:      #0063e5;
+    --jf-btn-primary-fg:      #ffffff;
+    --jf-btn-radius:          4px;
+
+    --jf-topbar-bg:           rgba(4, 7, 20, .8);
+    --jf-topbar-blur:         16px;
+    --jf-topbar-link-color:   #d4dcf2;
+
+    --jf-row-gap:             14px;
+
+    --jf-font-family:         'Avenir', 'Avenir Next', 'Helvetica Neue', sans-serif;
+}
+
+.jf-brand { color: #0063e5; }

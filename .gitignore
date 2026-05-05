@@ -1,0 +1,19 @@
+## .NET / C#
+bin/
+obj/
+publish/
+releases/
+*.user
+*.suo
+.vs/
+*.nupkg
+TestResults/
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Secrets — never commit API keys
+**/appsettings.Development.json
+**/*.pfx
+**/*.snk
